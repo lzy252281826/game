@@ -1,0 +1,467 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+#include<Windows.h>
+
+#define U 1;
+#define D 2;
+typedef struct Wall
+{
+	int x;
+	int y;
+}wall;
+void main();
+void pos();
+void initgame();
+void greateWall1();
+void greateWall2();
+void greateWall3();
+void greateWall4();
+void wallmove1();
+void wallmove2();
+void wallmove3();
+void wallmove4();
+void birdmove();
+void endgame();
+void rungame();
+void initbird();
+void gamestart();
+void rungame();
+void greatemap();
+void hidden();
+void pause();
+int i, j;
+int bx=15;
+int by = 10;
+int status;
+wall w1,w2,w3,w4;
+int t1 = 0;
+int t2 = 0;
+int t3 = 0;
+int e;
+int add = 0;
+void pos(int x,int y)
+{
+	COORD coord;
+	coord.X = x;
+	coord.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+void hidden()
+{
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO cci;
+	GetConsoleCursorInfo(hOut, &cci);
+	cci.bVisible = 0;
+	SetConsoleCursorInfo(hOut, &cci);
+}
+void pause()
+{
+	while (1)
+	{
+		Sleep(300);
+		if (GetAsyncKeyState(VK_SPACE))
+		{
+			break;
+		}
+
+	}
+}
+void gamestart()
+{
+	
+	pos(42,14);
+	system("title 吕泽宇");
+	printf("Flappy bird !!!");
+	pos(42, 17);
+	printf("通过↑进行操作");
+	pos(3, 26);
+	system("pause");
+	system("cls");
+}
+void initbird()
+{
+	pos(bx,by);
+	printf("∞");
+}
+void initgame()
+{
+	system("mode con cols=100 lines=30");
+	gamestart();
+	initbird();
+	greatemap();
+}
+void birdmove()
+{
+	if (by == 26 || by == 0)
+	{
+		e = 2;
+		endgame();
+	}
+	if (status == 1 )
+	{
+		
+		pos(bx, by);
+		printf("  ");
+		by--;
+		
+		pos(bx, by); 
+		printf("∞");
+	}
+	else if (status == 2)
+	{
+		pos(bx, by);
+		printf("  ");
+		by++;
+		pos(bx, by);
+		printf("∞");
+	}
+	status = 3;
+	wallmove1();
+	if (t1)
+	{
+		wallmove2();
+	}
+	if (t2)
+	{
+		wallmove3();
+	}
+	if (t3)
+	{
+		wallmove4();
+	}
+	if (((by>=0&&by <= w1.y-1) && bx == w1.x)||(by>=5+w1.y&&bx==w1.x))
+	{
+		e = 1;
+		endgame();
+	}
+	if (((by >= 0 && by <= w2.y-1) && bx == w2.x) || (by >= 5+ w2.y&&bx == w2.x))
+	{
+		e = 1;
+		endgame();
+	}
+	if (((by >= 0 && by <= w3.y-1) && bx == w3.x) || (by >= 5+ w3.y&&bx == w3.x))
+	{
+		e = 1;
+		endgame();
+	}
+	if (((by >= 0 && by <= w4.y-1) && bx == w4.x) || (by >= 5+w4.y&&bx == w4.x))
+	{
+		e = 1;
+		endgame();
+	}
+	pos(76, 8);
+	printf("暂停：space");
+	pos(76, 10);
+	printf("上移：↑");
+	pos(80, 5);
+	printf("%d",add);
+	rungame();
+}
+void wallmove1()
+{
+	for (i = 1; i < w1.y; i++)
+	{
+		pos(w1.x, i);
+		printf("  ");
+	}
+	for (i = 0; i != 25 - w1.y - 3; i++)
+	{
+		j = 25 - i;
+		pos(w1.x, j - 1);
+		printf("  ");
+	}
+	w1.x--;
+	for (i = 1; i < w1.y; i++)
+	{
+		pos(w1.x, i);
+		printf("■");
+	}
+	for (i = 0; i != 25 - w1.y - 3; i++)
+	{
+		j = 25 - i;
+		pos(w1.x, j);
+		printf("■");
+	}
+	if (w1.x == 18)
+	{
+		add++;
+	}
+	if (w1.x == 52)
+	{
+		greateWall2();
+		t1 = 1;
+	}
+	else if (w1.x == 10)
+	{
+		for (i = 1; i < w1.y; i++)
+		{
+			pos(w1.x, i);
+			printf("  ");
+		}
+		for (i = 0; i != 25 - w1.y - 3; i++)
+		{
+			j = 25 - i;
+			pos(w1.x, j );
+			printf("  ");
+		}
+		greateWall1();
+	}
+}
+void wallmove2()
+{
+	for (i = 1; i < w2.y; i++)
+	{
+		pos(w2.x, i);
+		printf("  ");
+	}
+	for (i = 0; i != 25 - w2.y - 3; i++)
+	{
+		j = 25 - i;
+		pos(w2.x, j - 1);
+		printf("  ");
+	}
+	w2.x--;
+	for (i = 1; i < w2.y; i++)
+	{
+		pos(w2.x, i);
+		printf("■");
+	}
+	for (i = 0; i != 21 - w2.y; i++)
+	{
+		j = 25 - i;
+		pos(w2.x, j);
+		printf("■");
+	}
+	if (w2.x == 18)
+	{
+		add++;
+	}
+	if (w2.x == 52)
+	{
+		greateWall3();
+		t2 = 1;
+	}
+	else if (w2.x == 10)
+	{
+		for (i = 1; i < w2.y; i++)
+		{
+			pos(w2.x, i);
+			printf("  ");
+		}
+		for (i = 0; i != 21 - w2.y; i++)
+		{
+			j = 25 - i;
+			pos(w2.x, j);
+			printf("  ");
+		}
+		greateWall2();
+	}
+}
+void wallmove3()
+{
+	for (i = 1; i < w3.y; i++)
+	{
+		pos(w3.x, i);
+		printf("  ");
+	}
+	for (i = 0; i != 25 - w3.y - 3; i++)
+	{
+		j = 25 - i;
+		pos(w3.x, j - 1);
+		printf("  ");
+	}
+	w3.x--;
+	for (i = 1; i < w3.y; i++)
+	{
+		pos(w3.x, i);
+		printf("■");
+	}
+	for (i = 0; i != 25 - w3.y - 3; i++)
+	{
+		j = 25 - i;
+		pos(w3.x, j);
+		printf("■");
+	}
+	if (w3.x == 18)
+	{
+		add++;
+	}
+	if (w3.x == 52)
+	{
+		greateWall4();
+		t3 = 1;
+	}
+	else if (w3.x == 10)
+	{
+		for (i = 1; i < w3.y; i++)
+		{
+			pos(w3.x, i);
+			printf("  ");
+		}
+		for (i = 0; i != 25 - w3.y - 3; i++)
+		{
+			j = 25 - i;
+			pos(w3.x, j);
+			printf("  ");
+		}
+		greateWall3();
+	}
+}
+void wallmove4()
+{
+	for (i = 1; i < w4.y; i++)
+	{
+		pos(w4.x, i);
+		printf("  ");
+	}
+	for (i = 0; i != 25 - w4.y - 3; i++)
+	{
+		j = 25 - i;
+		pos(w4.x, j - 1);
+		printf("  ");
+	}
+	w4.x--;
+	for (i = 1; i < w4.y; i++)
+	{
+		pos(w4.x, i);
+		printf("■");
+	}
+	for (i = 0; i != 25 - w4.y - 3; i++)
+	{
+		j = 25 - i;
+		pos(w4.x, j);
+		printf("■");
+	}
+	if (w4.x == 18)
+	{
+		add++;
+	}
+	if (w4.x == 10)
+	{
+		for (i = 1; i < w4.y; i++)
+		{
+			pos(w4.x, i);
+			printf("  ");
+		}
+		for (i = 0; i != 25 - w4.y - 3; i++)
+		{
+			j = 25 - i;
+			pos(w4.x, j);
+			printf("  ");
+		}
+		greateWall4();
+	}
+}
+void rungame()
+{
+	while (1)
+	{
+
+		if (GetAsyncKeyState(VK_UP))
+		{
+			status = U;
+		}
+		else if (GetAsyncKeyState(VK_SPACE))
+		{
+			pause();
+		}
+		
+		else
+		{
+			status = D;
+		}
+		Sleep(230);
+		birdmove();
+	}
+}
+void greatemap()
+{
+	for (i = 0; i<72; i += 2)//打印上下边框
+	{
+		pos(i, 0);
+		printf("■");//一个方块占两个位置
+		pos(i, 26);
+		printf("■");
+	}
+	for (i = 1; i<26; i++)//打印左右边框
+	{
+		pos(0, i);
+		printf("■");
+		pos(70, i);
+		printf("■");
+	}
+}
+void endgame()
+{
+
+
+	if (e == 2)
+	{
+		system("cls");
+		pos(42, 14);
+		printf("游戏结束：你超界了！");
+		pos(42, 15);
+		printf("得分：%d", add);
+		pos(43, 16);
+		printf("输入 y 关闭游戏");
+		pos(46, 17);
+		if (getchar() == 'y')
+		{
+			exit(0);
+		}
+
+	}
+	else if (e == 1)
+	{
+		system("cls");
+		pos(42, 14);
+		printf("游戏结束：你撞墙了！");
+		pos(42, 15);
+		printf("得分：%d", add);
+		pos(43, 16);
+		printf("输入 y 关闭游戏");
+		pos(46, 17);
+		if (getchar() == 'y')
+		{
+			exit(0);
+		}
+
+	}
+}
+void greateWall1()
+{
+	w1.x = 68;
+	w1.y = rand() % 21;
+
+}
+void greateWall2()
+{
+
+	w2.x = 68;
+	w2.y = rand() % 21;
+
+	
+}
+void greateWall3()
+{
+
+	w3.x = 68;
+	w3.y = rand() % 21;
+
+
+}void greateWall4()
+{
+	w4.x = 68;
+	w4.y = rand() % 21;
+	
+}
+void main()
+{
+	
+    srand((unsigned)time(NULL));
+	hidden();
+	initgame();
+	greateWall1();
+	rungame();
+}
